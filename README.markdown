@@ -1,8 +1,12 @@
 FINF Is Not Forth
 =================
 
-*** This project needs to be rewritten so it's easier to read and extend. If you're up to the task, contact the author, as he already has some ideas that might help you ***
+Adopted by Uwe Post. Based on FINF 0.1.7 by Leandro A. F. Pereira.
 
+As currently tested on Arduino Nano Clone. Removed motor support.
+
+
+Original text follows.
 
 What is it?
 -----------
