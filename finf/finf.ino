@@ -1,19 +1,24 @@
 /*
  * FINF - FINF Is Not Forth
- * Version 0.1.7
+ * Version 0.1.7u
  * Copyright (c) 2005-2011 Leandro A. F. Pereira <leandro@tia.mat.br>
+ * Copyright (c) 2019 Uwe Post <uwe.post@upcenter.de>
+ * 
+ * removed motor stuff - unavailable dependency
+ * 
  * Licensed under GNU GPL version 2.
  */
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
-#include <AFMotor.h>
+
+#define VERSION "0.1.7u"
 
 /*
  * Uncomment if building to use on a terminal program
  * (instead of Arduino's Serial Monitor) -- uses ~800bytes
  * of flash + ~40bytes of RAM
  */
-#define TERMINAL 1
+#define TERMINAL 0
 
 #define MAX_WORDS   100
 #define MAX_PROGRAM 64
@@ -553,7 +558,9 @@ void eval_code(unsigned char opcode, int param, char mode)
       break;
 
     case OP_PINWRITE:
-      digitalWrite(stack_pop(), stack_pop());
+      int pin= stack_pop();
+      int val= stack_pop();
+      digitalWrite(pin,val);
       break;
 
     case OP_PINREAD:
@@ -1153,7 +1160,7 @@ void setup()
 {
   delay(100);
   Serial.begin(9600);
-  serial_print_P(PSTR(COLOR "FINF 0.1.7 - "));
+  serial_print_P(PSTR(COLOR "FINF " VERSION " - "));
   Serial.print(free_mem());
   serial_print_P(PSTR(" bytes free\r\n" ENDCOLOR));
   word_init();
@@ -1339,10 +1346,10 @@ void run_steppers()
   int steps = stack_pop();
 
   int motor_speed = 30; //stack_pop();
-
-  AF_Stepper motor(100, port);
-  motor.setSpeed(motor_speed); 
-  motor.step(steps, motor_direction, DOUBLE); 
+//
+//  AF_Stepper motor(100, port);
+//  motor.setSpeed(motor_speed); 
+//  motor.step(steps, motor_direction, DOUBLE); 
 }
 
 void run_dcmotor()
@@ -1351,13 +1358,13 @@ void run_dcmotor()
   int motor_direction = stack_pop();
   int motor_speed = stack_pop();
 
-  AF_DCMotor motor(port);
-
-  motor.setSpeed(200);
-  motor.run(RELEASE);
-
-  motor.run(motor_direction);
-  motor.setSpeed(motor_speed);  
+//  AF_DCMotor motor(port);
+//
+//  motor.setSpeed(200);
+//  motor.run(RELEASE);
+//
+//  motor.run(motor_direction);
+//  motor.setSpeed(motor_speed);  
 }
 
 void run_dcmotors_forward() 
@@ -1379,18 +1386,18 @@ void run_dcmotors_forward()
     motor2_port = 4;
   }
 
-  AF_DCMotor motor1(motor1_port);
-  AF_DCMotor motor2(motor2_port);
-
-  motor1.setSpeed(200);
-  motor1.run(RELEASE);
-  motor2.setSpeed(200);
-  motor2.run(RELEASE);
-
-  motor1.run(FORWARD);
-  motor1.setSpeed(motor_speed);
-  motor2.run(BACKWARD);
-  motor2.setSpeed(motor_speed);  
+//  AF_DCMotor motor1(motor1_port);
+//  AF_DCMotor motor2(motor2_port);
+//
+//  motor1.setSpeed(200);
+//  motor1.run(RELEASE);
+//  motor2.setSpeed(200);
+//  motor2.run(RELEASE);
+//
+//  motor1.run(FORWARD);
+//  motor1.setSpeed(motor_speed);
+//  motor2.run(BACKWARD);
+//  motor2.setSpeed(motor_speed);  
 }
 
 void run_dcmotors_backward()
@@ -1412,18 +1419,18 @@ void run_dcmotors_backward()
     motor2_port = 4;
   }
 
-  AF_DCMotor motor1(motor1_port);
-  AF_DCMotor motor2(motor2_port);
-
-  motor1.setSpeed(200);
-  motor1.run(RELEASE);
-  motor2.setSpeed(200);
-  motor2.run(RELEASE);
-
-  motor1.run(BACKWARD);
-  motor1.setSpeed(motor_speed);
-  motor2.run(FORWARD);
-  motor2.setSpeed(motor_speed);  
+//  AF_DCMotor motor1(motor1_port);
+//  AF_DCMotor motor2(motor2_port);
+//
+//  motor1.setSpeed(200);
+//  motor1.run(RELEASE);
+//  motor2.setSpeed(200);
+//  motor2.run(RELEASE);
+//
+//  motor1.run(BACKWARD);
+//  motor1.setSpeed(motor_speed);
+//  motor2.run(FORWARD);
+//  motor2.setSpeed(motor_speed);  
 }
 
 void run_dcmotors_stop() 
@@ -1444,18 +1451,18 @@ void run_dcmotors_stop()
     motor2_port = 4;
   }
 
-  AF_DCMotor motor1(motor1_port);
-  AF_DCMotor motor2(motor2_port);
-
-  motor1.setSpeed(0);
-  motor1.run(RELEASE);
-  motor2.setSpeed(0);
-  motor2.run(RELEASE);
-
-  motor1.run(BACKWARD);
-  motor1.setSpeed(0);
-  motor2.run(FORWARD);
-  motor2.setSpeed(0);  
+//  AF_DCMotor motor1(motor1_port);
+//  AF_DCMotor motor2(motor2_port);
+//
+//  motor1.setSpeed(0);
+//  motor1.run(RELEASE);
+//  motor2.setSpeed(0);
+//  motor2.run(RELEASE);
+//
+//  motor1.run(BACKWARD);
+//  motor1.setSpeed(0);
+//  motor2.run(FORWARD);
+//  motor2.setSpeed(0);  
 }
 
 void run_dcmotors_turn() 
@@ -1477,19 +1484,19 @@ void run_dcmotors_turn()
     motor2_port = 4;
   }
 
-  AF_DCMotor motor1(motor1_port);
-  AF_DCMotor motor2(motor2_port);
-
-  motor1.setSpeed(0);
-  motor1.run(RELEASE);
-  motor2.setSpeed(0);
-  motor2.run(RELEASE);
-
-  turn_direction = turn_direction == 1 ? BACKWARD : FORWARD;
-  motor1.run(turn_direction);
-  motor1.setSpeed(motor_speed);
-  motor2.run(turn_direction);
-  motor2.setSpeed(motor_speed);  
+//  AF_DCMotor motor1(motor1_port);
+//  AF_DCMotor motor2(motor2_port);
+//
+//  motor1.setSpeed(0);
+//  motor1.run(RELEASE);
+//  motor2.setSpeed(0);
+//  motor2.run(RELEASE);
+//
+//  turn_direction = turn_direction == 1 ? BACKWARD : FORWARD;
+//  motor1.run(turn_direction);
+//  motor1.setSpeed(motor_speed);
+//  motor2.run(turn_direction);
+//  motor2.setSpeed(motor_speed);  
 }
 
 void readln() 
@@ -1534,5 +1541,4 @@ void readln()
   stack_push(current_pos - initial_pos);
   Serial.println();   
 }
-
 
