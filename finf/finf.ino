@@ -1,9 +1,11 @@
 
 /*
  * FINF - FINF Is Not Forth
- * Version 0.1.7
+ * Version 0.1.7a
  * Copyright (c) 2005-2011 Leandro A. F. Pereira <leandro@tia.mat.br>
+ * Minor changes (c) 2019 Uwe Post <uwe.post@upcenter.de>
  * Licensed under GNU GPL version 2.
+ * Needs the Adafruit Motor Shield library which can be found in the Arduino IDE's libraries or here https://github.com/adafruit/Adafruit-Motor-Shield-library
  */
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
