@@ -31,13 +31,6 @@ Without TERMINAL defined, it is really only usable on a client-buffered terminal
 Example
 -------
 
-The blinking example can be cut and pasted from the code below. The word 'blinkf' will blink the LED forever (or until the user presses ^C).
-
-    1 13 pinmode
-    : led 13 digwrite;
-    : on 1 led;
-    : off 0 led;
-    : w 100 delay;
-    : blink 0 begin on w off w 1 + dup 10 = negate until;
-    : blinkf begin on w off w 1 until;
-    blink
+   led on
+   led off
+   
