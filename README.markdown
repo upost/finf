@@ -1,12 +1,12 @@
 FINF Is Not Forth
 =================
 
-Adopted by Uwe Post. Based on FINF 0.1.7 by Leandro A. F. Pereira.
+Edited by Uwe Post. Based on FINF 0.1.7 by Leandro A. F. Pereira.
 
-As currently tested on Arduino Nano Clone. Removed motor support.
+Tested on Arduino Nano Clone, builds with Arduino IDE 1.8.9.
 
+Use a serial terminal (i.e. Linux: minicom, Android: Serial USB Terminal), configure to 9600 Baud, 8 Bits, no parity, 1 stop bit.
 
-Original text follows.
 
 What is it?
 -----------
@@ -16,6 +16,9 @@ FINF is a simple implementation for a FORTH-like language for the Arduino platfo
 Current version weighs about 8kB of object code (8.8kB if built with TERMINAL defined), making it suitable even for less beefier Arduinos, such as the ones based on the Atmega168 microcontrollers (even though it runs out of memory quickly and starts to behave weirdly).
 
 FINF is not meant to support a significant amount of the standard FORTH library; it is more of a programming exercise than a implementation of a real language and programming environment. It was coded mostly in a couple of hours, with quick tests here and there. Expect it to be unstable and give erroneous results.
+
+See wiki for a brief description of built-in words.
+
 
 Screenshot
 ----------
@@ -31,6 +34,6 @@ Without TERMINAL defined, it is really only usable on a client-buffered terminal
 Example
 -------
 
-   led on
-   led off
+    led on
+    led off
    
