@@ -837,7 +837,7 @@ unsigned char open_scope(unsigned char entry, unsigned char end_opcode)
       entry = open_scope(program[entry].param, OP_THEN);
     } 
     else if (program[entry].opcode == OP_UNTIL) {
-      if (stack_pop()) {
+      if (!stack_pop()) {
         entry = program[entry].param;
       } 
       else {
@@ -1538,4 +1538,3 @@ void readln()
   stack_push(current_pos - initial_pos);
   Serial.println();   
 }
-
