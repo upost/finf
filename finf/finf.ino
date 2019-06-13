@@ -1,16 +1,19 @@
 
 /*
  * FINF - FINF Is Not Forth
- * Version 0.1.7a
+ * Version 0.1.8
  * Copyright (c) 2005-2011 Leandro A. F. Pereira <leandro@tia.mat.br>
- * Minor changes (c) 2019 Uwe Post <uwe.post@upcenter.de>
+ * maintained and extended by (c) 2019 Uwe Post <uwe.post@upcenter.de>
+ *  See: https://github.com/upost/finf
  * Licensed under GNU GPL version 2.
- * Needs the Adafruit Motor Shield library which can be found in the Arduino IDE's libraries or here https://github.com/adafruit/Adafruit-Motor-Shield-library
+ * Needs the Adafruit Motor Shield library which can be found in the Arduino IDE's libraries 
+ *  or here https://github.com/adafruit/Adafruit-Motor-Shield-library
  */
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
 #include <AFMotor.h>
 
+#define VERSION "0.1.8"
 
 /*
  * Uncomment if building to use on a terminal program
@@ -81,7 +84,15 @@ enum {
   OP_PRINT_MEMORY_STRING, // ( mwmory-address "print" -- ) prints the contents of a memory location to the serial port
   OP_MOVE_MEMORY,         // ( source-address target-address length "move" -- ) executes memmove
   OP_GET_STRING_LENGTH,   // ( memory-address "strlen" -- ) executes strlen
-};
+  OP_AND,                 // ( value value "and" -- logic-result )
+  OP_OR,                 // ( value value "and" -- logic-result )
+  OP_0EQ,                // ( value "0=" -- logic-result) 1 if value was 0, 0 else
+  OP_MILLIS,             // ( "millis" -- value) milliseconds since program start, as signed int, so this overflows from +32767 to -32768 each ~65.5 seconds
+  OP_RND,                // ( value "rnd" -- random_number) a random number in the range 0..value-1
+  OP_TONE,               // ( freq pin "tone" -- ) plays tone of frequency on pin
+  OP_NOTONE,             // ( pin "notone" --) stops playing tone
+  OP_MICROS,             // ( "micros" -- value) microseconds since start as signed int, so this overflows from +32767 to -32768 each ~65.5 milliseconds
+  };
 
 struct Word {
   union {
@@ -171,6 +182,14 @@ const char default_words_str[] PROGMEM = "+\0"
           "print\0"
           "move\0"
           "strlen\0"
+          "and\0"
+          "or\0"
+          "0=\0"
+          "millis\0"
+          "rnd\0"
+          "tone\0"
+          "notone\0"
+          "micros\0"
           ;
 
 #define DW(pos) (&default_words_str[pos])
@@ -236,7 +255,15 @@ const DefaultWord default_words[] PROGMEM = {
   { DW(284), OP_PRINT_MEMORY_STRING },
   { DW(290), OP_MOVE_MEMORY },
   { DW(295), OP_GET_STRING_LENGTH },
-
+  { DW(302), OP_AND },
+  { DW(306), OP_OR },
+  { DW(309), OP_0EQ },
+  { DW(312), OP_MILLIS },
+  { DW(319), OP_RND },
+  { DW(323), OP_TONE },
+  { DW(328), OP_NOTONE },
+  { DW(335), OP_MICROS },
+  
   { NULL, 0 },
 };
 
@@ -552,6 +579,36 @@ void eval_code(unsigned char opcode, int param, char mode)
       }
       break;
 
+    case OP_AND:
+      {
+        stack_push(stack_pop()&&stack_pop());
+      }
+      break;
+
+    case OP_OR:
+      {
+        stack_push(stack_pop()||stack_pop());
+      }
+      break;
+
+    case OP_0EQ:
+      {
+        if(stack_pop()==0) stack_push(1); else stack_push(0);
+      }
+      break;
+
+    case OP_MILLIS:
+      {
+        stack_push(millis());
+      }
+      break;
+      
+    case OP_MICROS:
+      {
+        stack_push(micros());
+      }
+      break;
+
     case OP_DELAY:
       delay(stack_pop());
       break;
@@ -755,6 +812,14 @@ void eval_code(unsigned char opcode, int param, char mode)
       stack_push(Serial.read());
       break;
 
+    case OP_TONE:
+      tone(stack_pop(), stack_pop());
+      break;
+
+    case OP_NOTONE:
+      noTone(stack_pop());
+      break;
+
     case OP_STEPPER_MOTOR:
       run_steppers();
       break;
@@ -814,6 +879,12 @@ void eval_code(unsigned char opcode, int param, char mode)
     case OP_GET_STRING_LENGTH:
       stack_push(strlen((char *)stack_pop()));
       break;
+
+    case OP_RND: 
+    {
+      stack_push(random(stack_pop()));
+    }
+    break;
 
     default:
       serial_print_P(PSTR("Unimplemented opcode: "));
@@ -1157,7 +1228,7 @@ void setup()
 {
   delay(100);
   Serial.begin(9600);
-  serial_print_P(PSTR(COLOR "FINF 0.1.7 - "));
+  serial_print_P(PSTR(COLOR "FINF " VERSION " - "));
   Serial.print(free_mem());
   serial_print_P(PSTR(" bytes free\r\n" ENDCOLOR));
   word_init();
