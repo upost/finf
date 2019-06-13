@@ -13,27 +13,26 @@ What is it?
 
 FINF is a simple implementation for a FORTH-like language for the Arduino platform. It is free software, released under GNU GPL version 2.
 
-Current version weighs about 8kB of object code (8.8kB if built with TERMINAL defined), making it suitable even for less beefier Arduinos, such as the ones based on the Atmega168 microcontrollers (even though it runs out of memory quickly and starts to behave weirdly).
-
-FINF is not meant to support a significant amount of the standard FORTH library; it is more of a programming exercise than a implementation of a real language and programming environment. It was coded mostly in a couple of hours, with quick tests here and there. Expect it to be unstable and give erroneous results.
+Current version weights about 8kB of object code (8.8kB if built with TERMINAL defined), making it suitable even for less beefier Arduinos, such as the ones based on the Atmega168 microcontrollers (even though it runs out of memory quickly and starts to behave weirdly).
 
 See wiki for a brief description of built-in words.
 
 
-Screenshot
-----------
+Getting started
+---------------
 
-This screenshot demonstrates a build with TERMINAL defined. This adds primitive support to use FINF over a VT100-compatible serial terminal, including some commonly used shortcut keys, like Ctrl+W to erase the last word, Ctrl+L to clear the screen, or Ctrl+C to abort current line. It also adds some color to help understand better the output.
+Install FINF on your Arduino using Arduino IDE. Use serial terminal to connect.
 
-![terminal mode screenshot!](http://i.imgur.com/TorgV.png)
+Blinky sample
+-------------
 
-Without TERMINAL defined, it is really only usable on a client-buffered terminal emulator, such as Arduino's Serial Monitor; even then, it is not so pleasant to use:
+```
+FINF 0.1.8 - 1061 bytes free
+>>> words
++ - * / . stk swap dup words drop = negate delay digwrite pinmode dis if else then begin until emit freemem digread analogread analogwrite > auto in out on off relay led pwm reset load save list erase ! @ ? variable e! e@ e? key step mot 
+Word count: 
+69
+>>> begin led on 500 delay led off 500 delay 0 until
 
-![serial monitor screenshot!](http://i.imgur.com/U2itX.png)
+```
 
-Example
--------
-
-    led on
-    led off
-   
