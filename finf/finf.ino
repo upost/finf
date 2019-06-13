@@ -901,7 +901,7 @@ unsigned char open_scope(unsigned char entry, unsigned char end_opcode)
         entry = open_scope(entry + 1, program[program[entry].param].opcode);
       } 
       else {
-        entry = open_scope(program[entry].param + 1, OP_THEN);
+        entry = open_scope(program[entry].param , OP_THEN);
       }
     } 
     else if (program[entry].opcode == OP_ELSE) {
