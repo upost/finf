@@ -614,7 +614,11 @@ void eval_code(unsigned char opcode, int param, char mode)
       break;
 
     case OP_PINWRITE:
-      digitalWrite(stack_pop(), stack_pop());
+      {
+        int pin = stack_pop();
+        int val = stack_pop();
+        digitalWrite(pin,val);
+      }
       break;
 
     case OP_PINREAD:
@@ -627,7 +631,11 @@ void eval_code(unsigned char opcode, int param, char mode)
 
     case OP_PWM:
     case OP_ANALOGWRITE:
-      analogWrite(stack_pop(), stack_pop());
+      {
+        int pin = stack_pop();
+        int val = stack_pop();
+        analogWrite(pin, val);
+      }
       break;
 
     case OP_PINMODE:
@@ -671,7 +679,10 @@ void eval_code(unsigned char opcode, int param, char mode)
       break;
 
     case OP_GT:
-      stack_push(stack_pop() > stack_pop());
+      {
+        int val = stack_pop();
+        stack_push(val > stack_pop());
+      }
       break;
 
     case OP_IF:
@@ -813,7 +824,11 @@ void eval_code(unsigned char opcode, int param, char mode)
       break;
 
     case OP_TONE:
-      tone(stack_pop(), stack_pop());
+      {
+        int pin=stack_pop();
+        int freq=stack_pop();
+        tone(pin, freq);
+      }
       break;
 
     case OP_NOTONE:
