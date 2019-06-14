@@ -36,3 +36,23 @@ Word count:
 
 ```
 
+Advanced samples
+----------------
+Connect a speaker to ground and pin D4.
+
+Then type this:
+
+```
+begin 3 analogread 4 tone 10 delay 0 until
+```
+
+You will hear a tone. Touch pin A3 (analog input) and you will hear the tone changing.
+Stop with Ctrl+C and `4 notone`
+
+Try this to create noise usind the random generator:
+
+```
+begin 2000 rnd 4 tone 0 until
+```
+
+
