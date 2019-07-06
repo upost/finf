@@ -1,7 +1,11 @@
 
 /*
  * FINF - FINF Is Not Forth
- * Version 0.1.8
+*/
+
+#define VERSION "0.2.1"
+
+/* 
  * Copyright (c) 2005-2011 Leandro A. F. Pereira <leandro@tia.mat.br>
  * maintained and extended by (c) 2019 Uwe Post <uwe.post@upcenter.de>
  *  See: https://github.com/upost/finf
@@ -13,7 +17,6 @@
 #include <EEPROM.h>
 #include <AFMotor.h>
 
-#define VERSION "0.1.8"
 
 /*
  * Uncomment if building to use on a terminal program
@@ -25,6 +28,7 @@
 #define MAX_WORDS   100
 #define MAX_PROGRAM 64
 #define MAX_STACK   16
+#define MAX_TERM_LINE_LENGTH 128
 
 #define STATE_INITIAL     0
 #define STATE_DEFWORD     1
@@ -285,7 +289,7 @@ char *pad = NULL;
 bool is_variable_definition = true;
 
 #ifdef TERMINAL
-char term_buffer[64];
+char term_buffer[MAX_TERM_LINE_LENGTH];
 char term_bufidx = 0;
 #endif /* TERMINAL */
 
@@ -639,8 +643,12 @@ void eval_code(unsigned char opcode, int param, char mode)
       break;
 
     case OP_PINMODE:
-      pinMode(stack_pop(), stack_pop());
-      break;
+      {
+        int pin = stack_pop();
+        int val = stack_pop();
+        pinMode(pin,val);
+        break;
+      }
 
     case OP_PRINT:
       Serial.print((int)stack_pop());
