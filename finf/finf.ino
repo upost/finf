@@ -3,7 +3,7 @@
  * FINF - FINF Is Not Forth
 */
 
-#define VERSION "0.2.1"
+#define VERSION "0.2.2"
 
 /* 
  * Copyright (c) 2005-2011 Leandro A. F. Pereira <leandro@tia.mat.br>
@@ -630,7 +630,7 @@ void eval_code(unsigned char opcode, int param, char mode)
       break;
 
     case OP_ANALOGREAD:
-      stack_push(analogRead(stack_pop()));
+      stack_push(analogRead(A0+stack_pop()));
       break;
 
     case OP_PWM:
@@ -638,7 +638,7 @@ void eval_code(unsigned char opcode, int param, char mode)
       {
         int pin = stack_pop();
         int val = stack_pop();
-        analogWrite(pin, val);
+        analogWrite(A0+pin, val);
       }
       break;
 
@@ -688,8 +688,9 @@ void eval_code(unsigned char opcode, int param, char mode)
 
     case OP_GT:
       {
-        int val = stack_pop();
-        stack_push(val > stack_pop());
+        int valtop = stack_pop();
+        int valnext = stack_pop();
+        stack_push(valtop > valnext ? 1 : 0);
       }
       break;
 

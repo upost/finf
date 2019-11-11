@@ -61,5 +61,15 @@ Try this to create noise usind the random generator:
 begin 2000 rnd 4 tone 0 until
 ```
 
+Connect a light sensitive resistor and a fixed resistor to ground, Vcc and port A2 (analog in). Connect a LED to port D2 (digital out).
+The LED will light up as long as the brightness on the light sensitive resistor is below a certain value (use your finger to shield it from the light).
+
+```
+2 out begin 2 analogread 100 > 2 digwrite 0 until
+```
+
+
+
+
 More examples to come.
 
